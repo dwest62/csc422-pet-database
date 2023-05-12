@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 /**
  * The PetRegistry class provides methods for managing a collection of Pets. It supports adding, sorting, and viewing pets.
  *
- * @author James West (westj4@csp.edu)
+ * @author James West
  * @version 1.0
  */
 public class PetRegistry {

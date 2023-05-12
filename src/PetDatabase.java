@@ -1,9 +1,19 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
+/**
+ * PetDatabase class serves as the main entry point for the application.
+ *
+ * @author James West
+ * @version 1.0
+ */
 public class PetDatabase {
+	/**
+	 * The main method which serves as the entry point for the application.
+	 *
+	 * @param args Command line arguments.
+	 */
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		
@@ -15,8 +25,8 @@ public class PetDatabase {
 			new Pet("Fiesty", 3)
 		)));
 		
-		PetMenuHandler menu = new PetMenuHandler(pets, scanner);
-		menu.run();
+		PetDatabaseMenu petDatabaseMenu = new PetDatabaseMenu(pets, scanner);
+		petDatabaseMenu.run();
 		scanner.close();
 	}
 }

@@ -6,7 +6,13 @@
  */
 public class Pet {
 	private String name;
-	
+
+	/**
+	 * Constructs a pet using the provided name and age.
+	 *
+	 * @param name The name of the pet.
+	 * @param age The age of the pet.
+	 */
 	public Pet(String name, int age) {
 		this.name = name;
 		this.age = age;
