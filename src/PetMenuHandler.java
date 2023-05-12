@@ -1,10 +1,6 @@
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Scanner;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -25,16 +21,19 @@ public class PetMenuHandler {
 	private final Scanner scanner;
 
 	private final IndexedTable<Pet, PetRowMapper> table;
+	private final PetRegistry registry;
 	
 	public PetMenuHandler(PetRegistry registry, Scanner scanner) {
 		this.scanner = scanner;
 		this.table = (IndexedTable<Pet, PetRowMapper>) new IndexedTable.IndexedBuilder<Pet, PetRowMapper>(
-			new PetRowMapper(), new Table.Column("ID", 3, Table.Column.Alignment.RIGHT)
+			new PetRowMapper(),
+			new Table.Column("ID", 3, Table.Column.Alignment.RIGHT),
+			registry.getPets()
 		)
 			.addColumn(new Table.Column("NAME", 10, Table.Column.Alignment.LEFT))
 			.addColumn(new Table.Column("AGE", 3, Table.Column.Alignment.RIGHT))
-            .addEntries(registry.getPets())
 			.build();
+		this.registry = registry;
 	}
 	
 	public void run() {
@@ -50,16 +49,16 @@ public class PetMenuHandler {
 	}
 	
 	private void addPets() {
-
-		Pet newPet =  InputHelper.requestValidInput(
+		InputHelper.requestValidInputs(
 			scanner,
 			"add pet (name, age): ",
 			(input) -> System.out.println("Error parsing pet: " + input),
 			new TryParse<>((str) -> {
 				String[] data = str.split(" ");
 				return new Pet(data[0], Integer.parseInt(data[1]));
-			})
-		);
+			}),
+			"done"::equalsIgnoreCase
+		).forEach(registry::addPet);
 	}
 	
 	private void searchPetsByName() {
