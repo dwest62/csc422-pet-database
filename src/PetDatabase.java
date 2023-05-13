@@ -15,6 +15,8 @@ public class PetDatabase {
 	 * @param args Command line arguments.
 	 */
 	public static void main(String[] args) {
+
+		System.out.printf("%s\n\n", "Welcome to Pet Database.");
 		Scanner scanner = new Scanner(System.in);
 		
 		PetRegistry pets = new PetRegistry(new ArrayList<>(Arrays.asList(
