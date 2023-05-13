@@ -1,10 +1,11 @@
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.ResourceBundle;
 
 /**
  * The PetDatabaseMenu class handles running the cli menu for pet database operations.
- *
+ * <p>
  * This class provides a cli menu allowing the user to select from the following operations:
  * <ol>
  * <li>{@link #viewPets()} - View all pets</li>
@@ -17,37 +18,44 @@ import java.util.function.Predicate;
  * @version 1.0
  */
 public class PetDatabaseMenu {
+	private static final ResourceBundle messages = ResourceBundle.getBundle("messages");
+
 	// Initializes the cli menu using the builder strategy.
 	private final CLIMenu menu = new CLIMenu.Builder()
-         .welcome("\nWhat would you like to do?")
-         .addMenuItem( "View all pets", this::viewPets)
-         .addMenuItem("Add more pets", this::addPets)
-         .addMenuItem("Update an existing pet", this::updatePet)
-         .addMenuItem("Remove an existing pet", this::removePet)
-         .addMenuItem("Search pets by name", this::searchPetsByName)
-         .addMenuItem("Search pets by age", this::searchPetsByAge)
-         .delimiter(")")
-         .prompt("Your choice: ")
-         .menuItemFormatter(
-             (index, delimiter, description) -> String.format("%d%s %s\n", index, delimiter, description))
-         .build();
-	// Initializes an AutoSizeTablePrinter of type <Pet, PetRowMapper>.
-	private final AutoSizeTablePrinter<Pet, PetRowMapper> tablePrinter = new AutoSizeTablePrinter<Pet, PetRowMapper>();
+		.welcome(messages.getString("menu.welcome"))
+		.addMenuItem(messages.getString("menu.viewPets"), this::viewPets)
+		.addMenuItem(messages.getString("menu.addPets"), this::addPets)
+		.addMenuItem(messages.getString("menu.updatePet"), this::updatePet)
+		.addMenuItem(messages.getString("menu.removePet"), this::removePet)
+		.addMenuItem(messages.getString("menu.searchByName"), this::searchPetsByName)
+		.addMenuItem(messages.getString("menu.searchByAge"), this::searchPetsByAge)
+		.delimiter(messages.getString("menu.delimiter"))
+		.prompt(String.format("%s ", messages.getString("menu.prompt")))
+		.menuItemFormatter(
+			(index, delimiter, description) -> String.format("%d%s %s\n", index, delimiter, description))
+		.build();
+
+	// Initialize an AutoSizeTablePrinter of type <Pet, PetRowMapper>.
+	private static final AutoSizeTablePrinter<Pet, PetRowMapper> tablePrinter =
+		new AutoSizeTablePrinter<Pet, PetRowMapper>();
+
+
+	// Manages pets in database.
+	private final PetRegistry registry;
 	// Scanner used for cli input.
 	private final Scanner scanner;
 	// Indexed pet database table.
 	private final IndexedTable<Pet, PetRowMapper> table;
-	// Manages pets in database.
-	private final PetRegistry registry;
 
 	/**
 	 * Constructs a Pet Menu Handler from the provided registry and scanner.
 	 *
 	 * @param registry The registry of pets.
-	 * @param scanner The scanner used for CLI input.
+	 * @param scanner  The scanner used for CLI input.
 	 */
 	public PetDatabaseMenu(PetRegistry registry, Scanner scanner) {
 		this.scanner = scanner;
+
 		this.table = (IndexedTable<Pet, PetRowMapper>) new IndexedTable.IndexedBuilder<Pet, PetRowMapper>(
 			new PetRowMapper(),
 			new Table.Column("ID", 3, Table.Column.Alignment.RIGHT),
@@ -56,6 +64,7 @@ public class PetDatabaseMenu {
 			.addColumn(new Table.Column("NAME", 10, Table.Column.Alignment.LEFT))
 			.addColumn(new Table.Column("AGE", 3, Table.Column.Alignment.RIGHT))
 			.build();
+
 		this.registry = registry;
 	}
 
@@ -72,72 +81,62 @@ public class PetDatabaseMenu {
 	 * @param filter The filter applied to the table.
 	 */
 	private void viewPets(Predicate<Pet> filter) {
-		System.out.println(tablePrinter.process(table, filter));
+		System.out.printf("%s\n\n", tablePrinter.process(table, filter));
 	}
 
 	/**
 	 * Displays a table of pet entries in the database.
 	 */
 	private void viewPets() {
-		System.out.println(tablePrinter.process(table));
+		System.out.printf("\n%s\n\n", tablePrinter.process(table));
 	}
 
 	/**
 	 * Prompts user for pets to add to database then adds pets.
 	 */
 	private void addPets() {
-		System.out.println(
-				"Let's add some pets to the database! Please provide each pet's name and age, separated by a space. " +
-				"For example, 'Rover 5'. Enter 'done' when finished."
-		);
 
-		InputErrorHandler inputErrorHandler = (input) ->
-				System.out.println(
-						"Oops! There was an error parsing your input: " + input + " . Please make sure to format your" +
-						" input as 'name age'. Let's try again."
-			);
+		System.out.printf("\n%s\n", messages.getString("prompt.addPetsInstruction"));
+
 		List<Pet> newPets = InputHelper.requestValidInputs(
 			scanner,
-			"add pet (name, age): ",
-				inputErrorHandler,
-			new TryParse<>((str) -> {
-				String[] data = str.split(" ");
-				return new Pet(data[0], Integer.parseInt(data[1]));
-			}),
+			String.format("%s ", messages.getString("prompt.addPet")),
+			input -> System.out.printf(String.format("%s\n", messages.getString("error.invalidPet")), input),
+			new TryParsePet(),
 			"done"::equalsIgnoreCase
 		);
-		newPets.forEach(registry::addPet);
 
 		// Assumes addPet is successful.
-		System.out.println(newPets.size() + " pets added.");
+		System.out.printf("%d pets added.\n\n", newPets.size());
 	}
-	
+
 	private void updatePet() {
-		System.out.println("To be implemented");
+		String prompt = "Enter the pet ID to update: ";
 	}
-	
+
 	/**
 	 * Displays the table of pets and continuously prompts the user to enter a pet's id until a valid pet id is
 	 * provided then removes the pet.
 	 */
 	private void removePet() {
-		InputErrorHandler inputErrorHandler = (input) -> System.out.println("Oops! There was an error parsing your " +
-			"input: " + input + ". Please make sure to format your input as a valid number. Let's try again.");
-		InputErrorHandler invalidIndex = (input -> System.out.println("Oops! " + input + "does not represent a valid " +
-			"pet id. Please try again."));
 		int petId = InputHelper.requestValidInput(
 			scanner,
-			"Enter the pet ID to remove: ",
-			inputErrorHandler,
+			String.format("\n%s\n%s ", tablePrinter.process(table), messages.getString("prompt.removePet")),
+			s -> System.out.printf(messages.getString("error.invalidInt").concat("\n"), s),
 			new TryParse<>(Integer::parseInt),
-			new Rule<Integer>(registry::hasPet, invalidIndex)
+			new Rule<Integer>(
+				registry::hasPet,
+				s -> System.out.printf(messages.getString("prompt.removePet"), s)
+			)
 		);
+		Pet pet = registry.removePetByID(petId);
+		System.out.printf("%s %d is removed.\n\n", pet.getName(), pet.getAge());
 	}
-	
+
 	/**
 	 * Prompts the user to enter a pet's name, searches the database for matching entries, then displays a table of any
 	 * entries matched.
-	 *
+	 * <p>
 	 * The matching is case-insensitive.
 	 */
 	private void searchPetsByName() {
@@ -149,7 +148,7 @@ public class PetDatabaseMenu {
 	/**
 	 * Prompts the user to enter a pet's age, searches the database for matching entries, then displays a table of any
 	 * entries matched.
-	 *
+	 * <p>
 	 * The matching is case-insensitive.
 	 */
 	private void searchPetsByAge() {
@@ -158,8 +157,8 @@ public class PetDatabaseMenu {
 			"Enter age to search: ",
 			input -> System.out.println("Could not parse input to integer. Please try again."),
 			TryParse.forInteger(),
-			new Rule<Integer>(integer -> integer >= 0, (input)->System.out.println("Please enter an age above 0.")));
+			new Rule<Integer>(integer -> integer >= 0, (input) -> System.out.println("Please enter an age above 0.")));
 		viewPets(pet -> pet.getAge() == age);
 	}
-	
+
 }

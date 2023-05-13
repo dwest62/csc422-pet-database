@@ -38,21 +38,6 @@ public class PetRegistry {
 	}
 	
 	/**
-	 * Returns a list of pets that match the provided name.
-	 *
-	 * <p>This method searches through the pet registry and returns a new list containing only pets that have a name
-	 * matching the input name. If no pets matching the input name are found, an empty list is returned.
-	 * </p>
-	 *
-	 *
-	 * @param name  The name of the pets to retrieve.
-	 * @return A new list containing any pets which match the provided name.
-	 */
-	public List<Pet> getPetsByName(String name) {
-		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
-	}
-	
-	/**
 	 * Returns true if pet id is in the list, otherwise false.
 	 *
 	 * @param id    The index of the pet representing its id.
@@ -62,16 +47,15 @@ public class PetRegistry {
 		// TODO - Update this to check for pet id if pet object is changed to store this info.
 		return id >= 0 && id < this.pets.size();
 	}
-	
+
 	/**
 	 * Removes a pet from the registry.
 	 *
 	 * @param id The index of the pet representing its id.
+	 * @return Pet The pet removed.
 	 */
-	public void removePet(int id) {
-		pets.remove(id);
-	}
-	
+	public Pet removePetByID(int id) {return pets.remove(id);}
+
 	/**
 	 * Returns a list of pets that match the provided age.
 	 *
@@ -84,5 +68,20 @@ public class PetRegistry {
 	 */
 	public List<Pet> getPetsByAge(int age) {
 		return this.pets.stream().filter(pet -> pet.getAge() == age).collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns a list of pets that match the provided name.
+	 *
+	 * <p>This method searches through the pet registry and returns a new list containing only pets that have a name
+	 * matching the input name. If no pets matching the input name are found, an empty list is returned.
+	 * </p>
+	 *
+	 *
+	 * @param name  The name of the pets to retrieve.
+	 * @return A new list containing any pets which match the provided name.
+	 */
+	public List<Pet> getPetsByName(String name) {
+		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
 	}
 }
