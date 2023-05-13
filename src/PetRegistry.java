@@ -44,8 +44,17 @@ public class PetRegistry {
 	 * @return      True if the id is in the list, otherwise false.
 	 */
 	public Boolean hasPet(int id) {
-		// TODO - Update this to check for pet id if pet object is changed to store this info.
 		return id >= 0 && id < this.pets.size();
+	}
+
+	/**
+	 * Returns pet at provided index representing the pet's id.
+	 *
+	 * @param id The index of the pet representing its id.
+	 * @return The pet at the provided index.
+	 */
+	public Pet getPetById(int id) {
+		return pets.get(id);
 	}
 
 	/**

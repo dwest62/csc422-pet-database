@@ -108,10 +108,27 @@ public class PetDatabaseMenu {
 
 		// Assumes addPet is successful.
 		System.out.printf("%d pets added.\n\n", newPets.size());
+
+		newPets.forEach(registry::addPet);
 	}
 
 	private void updatePet() {
-		String prompt = "Enter the pet ID to update: ";
+		int petId = promptPetId(messages.getString("prompt.updatePet"));
+		Pet pet = registry.getPetById(petId);
+		String oldName = pet.getName();
+		int oldAge = pet.getAge();
+
+		Pet tempPet = InputHelper.requestValidInput(
+			scanner,
+			String.format("%s ", messages.getString("prompt.updatedPetDetails")),
+			input -> System.out.printf(String.format("%s\n", messages.getString("error.invalidPet")), input),
+			new TryParsePet()
+		);
+
+		pet.setName(tempPet.getName());
+		pet.setAge(tempPet.getAge());
+
+		System.out.printf("%s %d changed to %s %d.\n\n", oldName, oldAge, pet.getName(), pet.getAge());
 	}
 
 	/**
@@ -119,18 +136,22 @@ public class PetDatabaseMenu {
 	 * provided then removes the pet.
 	 */
 	private void removePet() {
-		int petId = InputHelper.requestValidInput(
+		int petId = promptPetId(messages.getString("prompt.removePet"));
+		Pet pet = registry.removePetByID(petId);
+		System.out.printf("%s %d is removed.\n\n", pet.getName(), pet.getAge());
+	}
+
+	private int promptPetId(String prompt) {
+		return InputHelper.requestValidInput(
 			scanner,
-			String.format("\n%s\n%s ", tablePrinter.process(table), messages.getString("prompt.removePet")),
-			s -> System.out.printf(messages.getString("error.invalidInt").concat("\n"), s),
+			String.format("\n%s\n%s ", tablePrinter.process(table), prompt),
+			s -> System.out.printf(String.format("%s\n", messages.getString("error.invalidInt")), s),
 			new TryParse<>(Integer::parseInt),
 			new Rule<Integer>(
 				registry::hasPet,
-				s -> System.out.printf(messages.getString("prompt.removePet"), s)
+				s -> System.out.printf(String.format("%s\n", messages.getString("error.invalidPet")), s)
 			)
 		);
-		Pet pet = registry.removePetByID(petId);
-		System.out.printf("%s %d is removed.\n\n", pet.getName(), pet.getAge());
 	}
 
 	/**
