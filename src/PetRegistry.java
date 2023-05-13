@@ -19,7 +19,7 @@ public class PetRegistry {
 	/**
 	 * Adds a pet to the registry.
 	 *
-	 * @param pet The pet to be added.
+	 * @param pet   The pet to be added.
 	 */
 	public void addPet(Pet pet) {
 		this.pets.add(pet);
@@ -38,20 +38,33 @@ public class PetRegistry {
 	}
 	
 	/**
-	 * Returns a list of pets that match the provided name.
+	 * Returns true if pet id is in the list, otherwise false.
 	 *
-	 * <p>This method searches through the pet registry and returns a new list containing only pets that have a name
-	 * matching the input name. If no pets matching the input name are found, an empty list is returned.
-	 * </p>
-	 *
-	 *
-	 * @param name The name of the pets to retrieve.
-	 * @return A new list containing any pets which match the provided name.
+	 * @param id    The index of the pet representing its id.
+	 * @return      True if the id is in the list, otherwise false.
 	 */
-	public List<Pet> getPetsByName(String name) {
-		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
+	public Boolean hasPet(int id) {
+		return id >= 0 && id < this.pets.size();
 	}
-	
+
+	/**
+	 * Returns pet at provided index representing the pet's id.
+	 *
+	 * @param id The index of the pet representing its id.
+	 * @return The pet at the provided index.
+	 */
+	public Pet getPetById(int id) {
+		return pets.get(id);
+	}
+
+	/**
+	 * Removes a pet from the registry.
+	 *
+	 * @param id The index of the pet representing its id.
+	 * @return Pet The pet removed.
+	 */
+	public Pet removePetByID(int id) {return pets.remove(id);}
+
 	/**
 	 * Returns a list of pets that match the provided age.
 	 *
@@ -59,10 +72,25 @@ public class PetRegistry {
 	 * matching the input age. If no pets matching the input name are found, an empty list is returned.
 	 * </p>
 	 *
-	 * @param age The age of the pets to retrieve.
+	 * @param age   The age of the pets to retrieve.
 	 * @return A new list containing any pets which match the provided age.
 	 */
 	public List<Pet> getPetsByAge(int age) {
 		return this.pets.stream().filter(pet -> pet.getAge() == age).collect(Collectors.toList());
+	}
+
+	/**
+	 * Returns a list of pets that match the provided name.
+	 *
+	 * <p>This method searches through the pet registry and returns a new list containing only pets that have a name
+	 * matching the input name. If no pets matching the input name are found, an empty list is returned.
+	 * </p>
+	 *
+	 *
+	 * @param name  The name of the pets to retrieve.
+	 * @return A new list containing any pets which match the provided name.
+	 */
+	public List<Pet> getPetsByName(String name) {
+		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
 	}
 }
