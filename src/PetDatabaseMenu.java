@@ -9,8 +9,6 @@ import java.util.function.Predicate;
  * <ol>
  * <li>{@link #viewPets()} - View all pets</li>
  * <li>{@link #addPets()} - Add more pets</li>
- * <li>{@link #searchPetsByName()} - Search pets by name</li>
- * <li>{@link #searchPetsByAge()} - Search pets by age</li>
  * </ol>
  *
  * @author James West
@@ -22,8 +20,8 @@ public class PetDatabaseMenu {
          .welcome("\nWhat would you like to do?")
          .addMenuItem( "View all pets", this::viewPets)
          .addMenuItem("Add more pets", this::addPets)
-         .addMenuItem("Search pets by name", this::searchPetsByName)
-         .addMenuItem("Search pets by age", this::searchPetsByAge)
+//         .addMenuItem("Search pets by name", this::searchPetsByName) // To be released.
+//         .addMenuItem("Search pets by age", this::searchPetsByAge)
          .delimiter(")")
          .prompt("Your choice: ")
          .menuItemFormatter(
@@ -110,32 +108,34 @@ public class PetDatabaseMenu {
 		System.out.println(newPets.size() + " pets added.");
 	}
 
-	/**
-	 * Prompts the user to enter a pet's name, searches the database for matching entries, then displays a table of any
-	 * entries matched.
-	 *
-	 * The matching is case-insensitive.
-	 */
-	private void searchPetsByName() {
-		System.out.print("Enter a name to search: ");
-		String input = scanner.nextLine();
-		viewPets(pet -> input.equalsIgnoreCase(pet.getName()));
-	}
-
-	/**
-	 * Prompts the user to enter a pet's age, searches the database for matching entries, then displays a table of any
-	 * entries matched.
-	 *
-	 * The matching is case-insensitive.
-	 */
-	private void searchPetsByAge() {
-		Integer age = InputHelper.requestValidInput(
-			scanner,
-			"Enter age to search: ",
-			input -> System.out.println("Could not parse input to integer. Please try again."),
-			TryParse.forInteger(),
-			new Rule<Integer>(integer -> integer >= 0, (input)->System.out.println("Please enter an age above 0.")));
-		viewPets(pet -> pet.getAge() == age);
-	}
+	// To be released
+	
+//	/**
+//	 * Prompts the user to enter a pet's name, searches the database for matching entries, then displays a table of any
+//	 * entries matched.
+//	 *
+//	 * The matching is case-insensitive.
+//	 */
+//	private void searchPetsByName() {
+//		System.out.print("Enter a name to search: ");
+//		String input = scanner.nextLine();
+//		viewPets(pet -> input.equalsIgnoreCase(pet.getName()));
+//	}
+//
+//	/**
+//	 * Prompts the user to enter a pet's age, searches the database for matching entries, then displays a table of any
+//	 * entries matched.
+//	 *
+//	 * The matching is case-insensitive.
+//	 */
+//	private void searchPetsByAge() {
+//		Integer age = InputHelper.requestValidInput(
+//			scanner,
+//			"Enter age to search: ",
+//			input -> System.out.println("Could not parse input to integer. Please try again."),
+//			TryParse.forInteger(),
+//			new Rule<Integer>(integer -> integer >= 0, (input)->System.out.println("Please enter an age above 0.")));
+//		viewPets(pet -> pet.getAge() == age);
+//	}
 	
 }
