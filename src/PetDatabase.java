@@ -16,7 +16,7 @@ public class PetDatabase {
 	 */
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		System.out.printf("%s\n\n", "Welcome to Pet Database.");
+		System.out.printf("%s\n", "Welcome to Pet Database.");
 
 		PetRegistry pets = new PetRegistry(new ArrayList<>(Arrays.asList(
 			new Pet("Kitty", 8),
