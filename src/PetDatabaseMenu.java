@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
  * <ol>
  * <li>{@link #viewPets()} - View all pets</li>
  * <li>{@link #addPets()} - Add more pets</li>
+ * <li>{@link #updatePet()} - Updates pet data</li>
+ * <li>{@link #removePet()} - Removes pet from database </li>
  * <li>{@link #searchPetsByName()} - Search pets by name</li>
  * <li>{@link #searchPetsByAge()} - Search pets by age</li>
  * </ol>
@@ -112,6 +114,11 @@ public class PetDatabaseMenu {
 		newPets.forEach(registry::addPet);
 	}
 
+	/**
+	 * Continuously prompts user for a valid index of Pet to update. Once a valid index is provided, continuously
+	 * prompts user for new name and age. Once a valid name and age is given, updates pet with new name and age.
+	 *
+	 */
 	private void updatePet() {
 		int petId = promptPetId(messages.getString("prompt.updatePet"));
 		Pet pet = registry.getPetById(petId);
@@ -141,6 +148,12 @@ public class PetDatabaseMenu {
 		System.out.printf("%s %d is removed.\n\n", pet.getName(), pet.getAge());
 	}
 
+	/**
+	 * Displays a table of pets and prompts user for a pet id using prompt provided.
+	 *
+	 * @param prompt The prompt
+	 * @return The pet id provided by the user.
+	 */
 	private int promptPetId(String prompt) {
 		return InputHelper.requestValidInput(
 			scanner,
