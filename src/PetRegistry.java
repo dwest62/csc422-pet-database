@@ -19,7 +19,7 @@ public class PetRegistry {
 	/**
 	 * Adds a pet to the registry.
 	 *
-	 * @param pet The pet to be added.
+	 * @param pet   The pet to be added.
 	 */
 	public void addPet(Pet pet) {
 		this.pets.add(pet);
@@ -45,11 +45,31 @@ public class PetRegistry {
 	 * </p>
 	 *
 	 *
-	 * @param name The name of the pets to retrieve.
+	 * @param name  The name of the pets to retrieve.
 	 * @return A new list containing any pets which match the provided name.
 	 */
 	public List<Pet> getPetsByName(String name) {
 		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Returns true if pet id is in the list, otherwise false.
+	 *
+	 * @param id    The index of the pet representing its id.
+	 * @return      True if the id is in the list, otherwise false.
+	 */
+	public Boolean hasPet(int id) {
+		// TODO - Update this to check for pet id if pet object is changed to store this info.
+		return id >= 0 && id < this.pets.size();
+	}
+	
+	/**
+	 * Removes a pet from the registry.
+	 *
+	 * @param id The index of the pet representing its id.
+	 */
+	public void removePet(int id) {
+		pets.remove(id);
 	}
 	
 	/**
@@ -59,7 +79,7 @@ public class PetRegistry {
 	 * matching the input age. If no pets matching the input name are found, an empty list is returned.
 	 * </p>
 	 *
-	 * @param age The age of the pets to retrieve.
+	 * @param age   The age of the pets to retrieve.
 	 * @return A new list containing any pets which match the provided age.
 	 */
 	public List<Pet> getPetsByAge(int age) {

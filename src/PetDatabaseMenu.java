@@ -22,6 +22,8 @@ public class PetDatabaseMenu {
          .welcome("\nWhat would you like to do?")
          .addMenuItem( "View all pets", this::viewPets)
          .addMenuItem("Add more pets", this::addPets)
+         .addMenuItem("Update an existing pet", this::updatePet)
+         .addMenuItem("Remove an existing pet", this::removePet)
          .addMenuItem("Search pets by name", this::searchPetsByName)
          .addMenuItem("Search pets by age", this::searchPetsByAge)
          .delimiter(")")
@@ -109,7 +111,29 @@ public class PetDatabaseMenu {
 		// Assumes addPet is successful.
 		System.out.println(newPets.size() + " pets added.");
 	}
-
+	
+	private void updatePet() {
+		System.out.println("To be implemented");
+	}
+	
+	/**
+	 * Displays the table of pets and continuously prompts the user to enter a pet's id until a valid pet id is
+	 * provided then removes the pet.
+	 */
+	private void removePet() {
+		InputErrorHandler inputErrorHandler = (input) -> System.out.println("Oops! There was an error parsing your " +
+			"input: " + input + ". Please make sure to format your input as a valid number. Let's try again.");
+		InputErrorHandler invalidIndex = (input -> System.out.println("Oops! " + input + "does not represent a valid " +
+			"pet id. Please try again."));
+		int petId = InputHelper.requestValidInput(
+			scanner,
+			"Enter the pet ID to remove: ",
+			inputErrorHandler,
+			new TryParse<>(Integer::parseInt),
+			new Rule<Integer>(registry::hasPet, invalidIndex)
+		);
+	}
+	
 	/**
 	 * Prompts the user to enter a pet's name, searches the database for matching entries, then displays a table of any
 	 * entries matched.
