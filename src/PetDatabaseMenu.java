@@ -163,7 +163,7 @@ public class PetDatabaseMenu {
 			new TryParse<>(Integer::parseInt),
 			new Rule<Integer>(
 				registry::hasPet,
-				s -> System.out.printf(String.format("%s\n", messages.getString("error.invalidPet")), s)
+				s -> System.out.printf(String.format("%s\n", messages.getString("error.invalidPetIndex")), s)
 			)
 		);
 	}
@@ -175,7 +175,7 @@ public class PetDatabaseMenu {
 	 * The matching is case-insensitive.
 	 */
 	private void searchPetsByName() {
-		System.out.print("Enter a name to search: ");
+		System.out.print(messages.getString("prompt.searchByName"));
 		String input = scanner.nextLine();
 		viewPets(pet -> input.equalsIgnoreCase(pet.getName()));
 	}
@@ -189,8 +189,8 @@ public class PetDatabaseMenu {
 	private void searchPetsByAge() {
 		Integer age = InputHelper.requestValidInput(
 			scanner,
-			"Enter age to search: ",
-			input -> System.out.println("Could not parse input to integer. Please try again."),
+			messages.getString("prompt.searchByAge"),
+			input -> System.out.println(messages.getString("error.invalidInt")),
 			TryParse.forInteger(),
 			new Rule<Integer>(integer -> integer >= 0, (input) -> System.out.println("Please enter an age above 0.")));
 		viewPets(pet -> pet.getAge() == age);
