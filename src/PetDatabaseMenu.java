@@ -25,10 +25,6 @@ public class PetDatabaseMenu {
 
 	// Initializes the cli menu using the builder strategy.
 	private final CLIMenu menu = new CLIMenu.Builder()
-         .welcome("\nWhat would you like to do?")
-         .addMenuItem( "View all pets", this::viewPets)
-         .addMenuItem("Add more pets", this::addPets)
-
 		.welcome(messages.getString("menu.welcome"))
 		.addMenuItem(messages.getString("menu.viewPets"), this::viewPets)
 		.addMenuItem(messages.getString("menu.addPets"), this::addPets)
