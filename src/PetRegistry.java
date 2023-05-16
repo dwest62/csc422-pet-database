@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,9 +9,9 @@ import java.util.stream.Collectors;
  * The PetRegistry class provides methods for managing a collection of Pets. It supports adding, sorting, and viewing pets.
  *
  * @author James West
- * @version 1.0
+ * @version 1.1
  */
-public class PetRegistry {
+public class PetRegistry implements Serializable {
 	private final ArrayList<Pet> pets;
 	
 	
@@ -92,5 +93,48 @@ public class PetRegistry {
 	 */
 	public List<Pet> getPetsByName(String name) {
 		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Save current registry to file.
+	 *
+	 * @param fileName The name of the file to save.
+	 */
+	public void save(String fileName) {
+		try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(fileName))) {
+			output.writeObject(this);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	/**
+	 * Load registry from file.
+	 *
+	 * @param fileName The name of the file holding the pet data.
+	 * @return The PetRegistry instance stored in the file, or an empty instance if file does not exist.
+	 * @throws IOException If file exists, but an error occurs loading the registry from the file.
+	 */
+	public static PetRegistry load(String fileName) throws IOException {
+		File petFile = new File(fileName);
+		if(!petFile.exists()) {
+			try {
+				petFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println("Critical error creating pet database data file.");
+				System.exit(0);
+			}
+		}
+		
+		try (FileInputStream fileInputStream = new FileInputStream(petFile)) {
+			if(petFile.length() == 0) {
+				return new PetRegistry(new ArrayList<>());
+			}
+			try (ObjectInputStream input = new ObjectInputStream(fileInputStream)) {
+				return (PetRegistry) input.readObject();
+			} catch (ClassNotFoundException e) {
+				throw new IOException(e);
+			}
+		}
 	}
 }

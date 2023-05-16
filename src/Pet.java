@@ -1,12 +1,19 @@
+import java.io.Serializable;
+
 /**
  * The class represents a Pet to be used to track Pet data in the Pet Database application.
  *
  * Future implementations of this class could include an id field to give Pets a static id, but for the purposes of
  * this application, the id will be tracked by a Pet's given index in a List.
+ *
+ * @author James West
+ * @version 1.1
  */
-public class Pet {
+public class Pet implements Serializable {
 	private String name;
-
+	
+	private int age;
+	
 	/**
 	 * Constructs a pet using the provided name and age.
 	 *
@@ -17,8 +24,6 @@ public class Pet {
 		this.name = name;
 		this.age = age;
 	}
-	
-	private int age;
 	
 	/**
 	 * Returns the name of the Pet.

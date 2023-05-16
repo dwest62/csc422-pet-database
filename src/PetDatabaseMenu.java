@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
  * </ol>
  *
  * @author James West
- * @version 1.0
+ * @version 1.3
  */
 public class PetDatabaseMenu {
 	private static final ResourceBundle messages = ResourceBundle.getBundle("messages");

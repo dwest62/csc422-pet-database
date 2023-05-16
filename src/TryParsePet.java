@@ -1,3 +1,9 @@
+/**
+ * TryParsePet is a subclass of TryPart specialized for Pet parsing.
+ *
+ * @author James West
+ * @version 1.1
+ */
 public class TryParsePet extends TryParse<Pet> {
 	TryParsePet() {
 		super((str) -> {
