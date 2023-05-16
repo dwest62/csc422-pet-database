@@ -10,7 +10,8 @@ import java.util.Scanner;
  * @version 1.1
  */
 public class PetDatabase {
-	
+
+	private static final int MAX_DATABASE_SIZE = 5;
 	/**
 	 * The main method which serves as the entry point for the application.
 	 *
@@ -24,8 +25,10 @@ public class PetDatabase {
 
 		System.out.printf("%s\n\n", "Welcome to Pet Database.");
 		
+
 		try (Scanner scanner = new Scanner(System.in)) {
 			PetRegistry pets = PetRegistry.load(file);
+			pets.setMaxSize(MAX_DATABASE_SIZE);
 			PetDatabaseMenu petDatabaseMenu = new PetDatabaseMenu(pets, scanner);
 			petDatabaseMenu.run();
 			pets.save(file);

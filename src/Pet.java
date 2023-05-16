@@ -21,8 +21,8 @@ public class Pet implements Serializable {
 	 * @param age The age of the pet.
 	 */
 	public Pet(String name, int age) {
-		this.name = name;
-		this.age = age;
+		this.setAge(age);
+		this.setName(name);
 	}
 	
 	/**
@@ -60,6 +60,8 @@ public class Pet implements Serializable {
 	 * @param age The new age of the Pet.
 	 */
 	public void setAge(int age) {
+		if (age < 1 || age > 20)
+			throw new IllegalArgumentException("Invalid age");
 		this.age = age;
 	}
 }

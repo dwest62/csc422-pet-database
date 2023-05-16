@@ -12,17 +12,29 @@ import java.util.stream.Collectors;
  * @version 1.1
  */
 public class PetRegistry implements Serializable {
-	private final ArrayList<Pet> pets;
+	private Integer maxSize;
+	private final List<Pet> pets;
+
 	
 	
-	public PetRegistry(ArrayList<Pet> pets) {this.pets = pets;}
+	public PetRegistry(ArrayList<Pet> pets)
+	{
+		this.pets = pets;
+	}
+	public PetRegistry()
+	{
+		this.pets = new ArrayList<>();
+	}
 	
 	/**
 	 * Adds a pet to the registry.
 	 *
 	 * @param pet   The pet to be added.
+	 * @throws IllegalArgumentException If Registry is full.
 	 */
 	public void addPet(Pet pet) {
+		if(maxSize != null && this.pets.size() == maxSize)
+			throw new IllegalArgumentException("Error adding pet: Registry full.");
 		this.pets.add(pet);
 	}
 	
@@ -95,6 +107,7 @@ public class PetRegistry implements Serializable {
 		return this.pets.stream().filter(pet -> Objects.equals(pet.getName(), name)).collect(Collectors.toList());
 	}
 	
+
 	/**
 	 * Save current registry to file.
 	 *
@@ -117,7 +130,7 @@ public class PetRegistry implements Serializable {
 	 */
 	public static PetRegistry load(String fileName) throws IOException {
 		File petFile = new File(fileName);
-		if(!petFile.exists()) {
+		if (!petFile.exists()) {
 			try {
 				petFile.createNewFile();
 			} catch (IOException e) {
@@ -127,7 +140,7 @@ public class PetRegistry implements Serializable {
 		}
 		
 		try (FileInputStream fileInputStream = new FileInputStream(petFile)) {
-			if(petFile.length() == 0) {
+			if (petFile.length() == 0) {
 				return new PetRegistry(new ArrayList<>());
 			}
 			try (ObjectInputStream input = new ObjectInputStream(fileInputStream)) {
@@ -136,5 +149,13 @@ public class PetRegistry implements Serializable {
 				throw new IOException(e);
 			}
 		}
+	}
+	
+	public void setMaxSize(int maxSize) {
+		if(maxSize < pets.size())
+			throw new IllegalArgumentException(String.format("Max size %d cannot be larger than current size %d",
+				maxSize,
+				pets.size()));
+		this.maxSize = maxSize;
 	}
 }
