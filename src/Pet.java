@@ -6,7 +6,9 @@
  */
 public class Pet {
 	private String name;
-
+	
+	private int age;
+	
 	/**
 	 * Constructs a pet using the provided name and age.
 	 *
@@ -14,11 +16,9 @@ public class Pet {
 	 * @param age The age of the pet.
 	 */
 	public Pet(String name, int age) {
-		this.name = name;
-		this.age = age;
+		this.setAge(age);
+		this.setName(name);
 	}
-	
-	private int age;
 	
 	/**
 	 * Returns the name of the Pet.
@@ -55,6 +55,8 @@ public class Pet {
 	 * @param age The new age of the Pet.
 	 */
 	public void setAge(int age) {
+		if (age < 1 || age > 20)
+			throw new IllegalArgumentException("Invalid age");
 		this.age = age;
 	}
 }

@@ -100,19 +100,20 @@ public class PetDatabaseMenu {
 	private void addPets() {
 
 		System.out.printf("\n%s\n", messages.getString("prompt.addPetsInstruction"));
+		int oldCount = registry.getPets().size();
 
-		List<Pet> newPets = InputHelper.requestValidInputs(
+		InputHelper.requestAndProcessValidInputs(
 			scanner,
 			String.format("%s ", messages.getString("prompt.addPet")),
 			input -> System.out.printf(String.format("%s\n", messages.getString("error.invalidPet")), input),
 			new TryParsePet(),
-			"done"::equalsIgnoreCase
+			"done"::equalsIgnoreCase,
+			new TryProcess<>(registry::addPet),
+			input -> System.out.printf(String.format("%s\n", messages.getString("error.databaseFull")), input)
 		);
 
 		// Assumes addPet is successful.
-		System.out.printf("%d pets added.\n\n", newPets.size());
-
-		newPets.forEach(registry::addPet);
+		System.out.printf("%d pets added.\n\n", registry.getPets().size() - oldCount);
 	}
 
 	/**
