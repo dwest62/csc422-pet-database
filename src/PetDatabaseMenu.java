@@ -31,7 +31,6 @@ public class PetDatabaseMenu {
 		.addMenuItem(messages.getString("menu.updatePet"), this::updatePet)
 		.addMenuItem(messages.getString("menu.removePet"), this::removePet)
 		.addMenuItem(messages.getString("menu.searchByName"), this::searchPetsByName)
-		.addMenuItem(messages.getString("menu.searchByAge"), this::searchPetsByAge)
 		.delimiter(messages.getString("menu.delimiter"))
 		.prompt(String.format("%s ", messages.getString("menu.prompt")))
 		.menuItemFormatter(
